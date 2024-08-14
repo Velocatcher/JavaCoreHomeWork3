@@ -2,6 +2,8 @@ package org.example;
 
 import java.util.Comparator;
 
+import static org.example.PartySelector.getPartyForToday;
+
 public class Employee {
     private static final int CURRENT_YEAR = 2024;
     String name;
@@ -10,12 +12,16 @@ public class Employee {
     String position;
     String phone;
     int salary;
-    static int birth;
-    static int bMonth;
-    static int bDay;
+    int birth;
+    int bMonth;
+    int bDay;
+
+    enum Genders{MALE, FEMALE};
+         Genders gender;
+
 
     public Employee(String name, String midName, String surName, String phone, String position, int salary
-            , int birth) {
+            , int birth, Genders gender) {
         this.name = name;
         this.midName = midName;
         this.surName = surName;
@@ -23,8 +29,15 @@ public class Employee {
         this.phone = phone;
         this.salary = salary;
         this.birth = birth;
+        this.gender = gender;
+    }
+    public Genders getGender() {
+        return gender;
     }
 
+    public void setGender(Genders gender) {
+        this.gender = gender;
+    }
     public String getName() {
         return name;
     }
@@ -67,15 +80,7 @@ public class Employee {
 
     @Override
     public String toString() {
-         return "Employee{" +
-                 "name='" + name + '\'' +
-                 ", midName='" + midName + '\'' +
-                 ", surName='" + surName + '\'' +
-                 ", position='" + position + '\'' +
-                 ", phone='" + phone + '\'' +
-                 ", salary=" + salary +
-                 ", age=" + getAge() +
-                 '}';
+         return STR."Employee{name='\{name}\{'\''}, midName='\{midName}\{'\''}, surName='\{surName}\{'\''}, position='\{position}\{'\''}, phone='\{phone}\{'\''}, salary=\{salary}, age=\{getAge()}, gender=\{getGender()}\{'}'}";
          }
 
 
@@ -86,7 +91,7 @@ public class Employee {
      * zero if this object is the same as given
      * */
 
-    public static int compare(int dd, int mm, int yyyy) {
+    public  int compare(int dd, int mm, int yyyy) {
          //day = 0..30, 31 is binary 11111, ok to left shift month by 6
          //month = 0..11, 15 is binary 1111, ok to left shift year by 5 more
          int empl = bDay + (bMonth << 6) + (birth << 11);
@@ -100,14 +105,41 @@ public class Employee {
         this.salary += amount;
     }
 
+//    enum Parties {NONE, NEW_YEAR, MARCH_8, FEB_23}
+
+//    private static final PartySelector.Parties today = PartySelector.Parties.NONE;
+//    private static  Parties today = Parties.MARCH_8;
+    private static void celebrate(Employee[] emp) {
+
+            PartySelector.Parties today = getPartyForToday();
+
+        for (int i = 0; i < emp.length; i++) {
+            switch (today) {
+                case NEW_YEAR:
+                    System.out.println(emp[i].name + ", happy New Year!");
+                    break;
+                case FEB_23:
+                    if (emp[i].gender == Employee.Genders.MALE)
+                        System.out.println(emp[i].name + ", happy February 23rd!");
+                    break;
+                case MARCH_8:
+                    if (emp[i].gender == Employee.Genders.FEMALE)
+                        System.out.println(emp[i].name + ", happy march 8th!");
+                    break;
+                default:
+                    System.out.println(emp[i].name + ", celebrate this morning!");
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
         Employee emp1 = new Employee("Иван", "Иванович", "Иванов", "+79189998877", "Сантехник"
-                , 100000, 1980);
-        Employee emp2 = new Employee("Петр", "Петрович", "Сидоров", "+79189998866", "Инженер"
-                , 150000, 1990);
+                , 100000, 1980, Genders.MALE);
+        Employee emp2 = new Employee("Маша", "Петрович", "Сидорова", "+79189998866", "Инженер"
+                , 150000, 1990, Genders.FEMALE);
         Employee manager = new Manager("Арнольд", "Адольфович", "Шварцнегеров", "+791899988555", "Менеджер"
-                , 250000, 1890);
+                , 250000, 1890, Genders.MALE);
 
         System.out.println(emp1);
         System.out.println(emp2);
@@ -120,8 +152,8 @@ public class Employee {
         System.out.println(emp2);
         System.out.println(manager);
         System.out.println();
-        System.out.println(compare(24,8,1967));
-
+//        System.out.println(compare(24,8,1967));
+        celebrate(company);
 
     }
 
